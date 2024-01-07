@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>checkbox</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../src/css/all.css">
+        <script src="../checkBox.js"></script>  
+        <style>
+            .checkbox-wrapper {
+                display: inline-flex;
+                width: fit-content;
+                align-items: center;
+                gap: .2em;
+            }
+
+            [checkers] {
+                width: fit-content;
+                border: dotted 2px #514e68; 
+                border-radius: 100vh;
+                display: inline-flex; 
+                padding: 4px;    
+            }
+            
+            .rotate[checkers][checked="checked"] {
+                animation: rotate 5s infinite linear;
+            }
+
+            [checkers] > [marker] {
+                border-radius: 100vh;  
+            }
+            
+            @keyframes rotate{
+              0%{
+                transform: rotate(0deg);
+              }
+              100%{
+                transform : rotate(360deg);
+              }
+            }
+        </style>     
+    </head>
+    
+    <body>
+      <section class="side-bar">
+        <span class="close flex mid">&times;</span>
+        <div class="side-bar-fit">
+              <div class="nav-list" id="">
+                  <a href="../index.html">Home</a>
+              </div>
+              <div class="nav-list" id="basic">
+                  <a href="../docs/basic.html">Basic</a>
+              </div>
+              <div class="nav-list" id="custom-selector">
+                  <a href="../docs/custom-selector.html">Custom Selector</a>
+              </div>
+              <div class="nav-list" id="markers">
+                  <a href="../docs/markers.html">Markers</a>
+              </div>
+              <div class="nav-list" id="single-marker">
+                  <a href="../docs/single-marker.html">Single Marker</a>
+              </div>
+              <div class="nav-list"id="double-markers">
+                  <a href="../docs/double-markers.html">Double Markers</a>
+              </div>
+              <div class="nav-list" id="custom-marker">
+                  <a href="../docs/custom-marker.html">Custom Marker</a>
+              </div>
+              <div class="nav-list" id="sizing-markers">
+                  <a href="../docs/sizing-markers.html">Sizing Markers</a>
+              </div>
+              <div class="nav-list" id="flipping-markers">
+                  <a href="../docs/flipping-markers.html">Flipping Markers</a>
+              </div>
+              <div class="nav-list" id="init-event">
+                  <a href="../docs/init-event.html">Init Event</a>
+              </div>
+              <div class="nav-list" id="toggle-event">
+                  <a href="../docs/toggle-event.html">Toggle Event</a>
+              </div>
+              <div class="nav-list" id="eager-loading">
+                  <a href="../docs/eager-loading.html">Eager Loading</a>
+              </div>
+              <div class="nav-list" id="fitting-images">
+                  <a href="../docs/fitting-images.html">Fitting Images</a>
+              </div>
+              <div class="nav-list" id="fitting-icons">
+                  <a href="../docs/fitting-icons.html">Fitting Icons</a>
+              </div>
+              <div class="nav-list" id="toggling-attribute">
+                  <a href="../docs/toggling-attribute.html">Toggling Attributes</a>
+              </div>
+              <div class="nav-list" id="toggling-attribute-advanced">
+                  <a href="../docs/toggling-attribute-advanced.html">Advanced Toggling</a>
+              </div>
+              <div class="nav-list" id="injecting-attribute">
+                  <a href="../docs/injecting-attributes.html">Injecting Attributes</a>
+              </div>
+              <div class="nav-list" id="adding-labels">
+                  <a href="../docs/adding-labels.html">Adding Labels</a>
+              </div>
+              <div class="nav-list" id="adding-colors">
+                  <a href="../docs/adding-colors.html">Adding Colors</a>
+              </div>
+              <div class="nav-list" id="disable-checkbox">
+                  <a href="../docs/disable-checkbox.html">Disable Checkbox</a>
+              </div>
+              <div class="nav-list" id="advanced-effects">
+                  <a href="../docs/advanced-effects.html">Advanced Effects</a>
+              </div>
+              <div class="nav-list" id="radio-effect">
+                  <a href="../docs/radio-effect.html">Radio Effect</a>
+              </div>
+              <div class="nav-list" id="base-effects">
+                  <a href="../docs/base-effects.html">Base Effect</a>
+              </div>
+              <div class="nav-list" id="base-reversal-effect">
+                  <a href="../docs/base-reversal-effect.html">Base Reversal Effect</a>
+              </div>
+              <div class="nav-list" id="slide-effect">
+                  <a href="../docs/slide-effect.html">Slide Effect</a>
+              </div>
+              <div class="nav-list" id="rating-effect">
+                  <a href="../docs/rating-effect.html">Rating Effect</a>
+              </div>
+              <div class="nav-list" id="polar-effect">
+                  <a href="../docs/polar-effect.html">Polar Effect</a>
+              </div>
+              <div class="nav-list" id="binding-parents">
+                  <a href="../docs/binding-parents.html">Binding Parent</a>
+              </div>
+              <div class="nav-list" id="fixing-cache">
+                  <a href="../docs/fixing-cache.html">Fixing Cache</a>
+              </div>
+              <div class="nav-list" id="cool-samples">
+                  <a href="../docs/cool-samples.html">Cool Samples</a>
+              </div>
+          </div>
+      </section>
+        <section class="bc-deeper-blue">
+
+            <div class="" style="font-size: 1.2em;"> <br>
+                <h1 style="color:#51ceff">CheckBox.js</h1> <br>
+                <h1 style="font-size: .9em; color:#51ceff">Advanced Effects</h1>
+            </div> <br>
+
+            <div class="">
+              The checkbox plugin supports extended relationships between custom checkboxes. This relationship is one that involves a group 
+              of custom checkboxes that are closely or inversely related. Since this relationshiprequires a parent group, the html structure is also 
+              slightly different. Here, the parent element is usually defined with an attribute of <code class="c-note bc">data-role</code> 
+              and the value is usually set as <code class="c-func bc">"checkbox-list"</code>. This parent element is used to group the custom checkboxes.
+              Once we place the custom checkbox inside this parent element, we can then proceed to define the type of toggle effect we need to achieve. 
+              The sample structure for setting up advance effects is shown below:
+            </div> <br>
+            
+            <div class="code mvt-1">
+                <div class="flex">
+                    <div class="code-x">
+                      <strong>Relative checkboxes</strong>
+                    </div>
+                    <div class="">
+                        <span class="copy-btn"><i class="bi-clipboard"></i></span>
+                    </div>
+                </div>
+<pre class="html active">
+<span class="comment">&lt;!--parent checkbox (grand group)--&gt;</span>
+<span class="tag">&lt;div <span>data-role="<span>checkbox-list</span>"</span>&gt;</span>
+
+  <span class="comment">&lt;!--first checkbox section--&gt;</span>
+  <span class="tag">&lt;div <span>data-role="<span>checkbox</span>" class="<span>in-flex wrap rad-r</span>"</span>&gt;</span>
+    <span class="tag">&lt;div <span>checker data-anime="<span>fadeIn</span>" data-assign="<span>:marker2</span>" data-color="<span>@red|lime</span>" class="<span>in-flex rad-r</span>"</span>&gt;</span>
+    
+      <span class="tag">&lt;div <span>marker class="<span>b-red</span>"</span>&gt;&lt;/div&gt;</span>
+      <span class="tag">&lt;div <span>marker class="<span>b-lime</span>"</span>&gt;&lt;/div&gt;</span>
+      
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;input <span>type="<span>checkbox</span>" checked="<span>false</span>" value="<span>M1</span>"</span>&gt;</span>
+  <span class="tag">&lt;/div&gt;</span> 
+  
+  <span class="comment">&lt;!--second checkbox section--&gt;</span>
+  <span class="tag">&lt;div <span>data-role="<span>checkbox</span>" class="<span>in-flex wrap rad-r</span>"</span>&gt;</span>
+    <span class="tag">&lt;div <span>checker data-anime="<span>fadeIn</span>" data-assign="<span>:marker2</span>" data-color="<span>@red|lime</span>" class="<span>in-flex rad-r</span>"</span>&gt;</span>
+    
+      <span class="tag">&lt;div <span>marker class="<span>b-red</span>"</span>&gt;&lt;/div&gt;</span>
+      <span class="tag">&lt;div <span>marker class="<span>b-lime</span>"</span>&gt;&lt;/div&gt;</span>
+      
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;input <span>type="<span>checkbox</span>" checked="<span>false</span>" value="<span>M2</span>"</span>&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  
+  <span class="comment">&lt;!--third checkbox section--&gt;</span>
+  <span class="tag">&lt;div <span>data-role="<span>checkbox</span>" class="<span>in-flex wrap rad-r</span>"</span>&gt;</span>
+    <span class="tag">&lt;div <span>checker data-anime="<span>fadeIn</span>" data-assign="<span>:marker2</span>" data-color="<span>@red|lime</span>" class="<span>in-flex rad-r</span>"</span>&gt;</span>
+    
+      <span class="tag">&lt;div <span>marker class="<span>b-red</span>"</span>&gt;&lt;/div&gt;</span>
+      <span class="tag">&lt;div <span>marker class="<span>b-lime</span>"</span>&gt;&lt;/div&gt;</span>
+      
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;input <span>type="<span>checkbox</span>" checked="<span>false</span>" value="<span>M3</span>"</span>&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  
+<span class="tag">&lt;/div&gt;</span>
+</pre>
+            </div> <br>
+            
+            <div class="">
+              From the sample above, each custom checkbox is sectionalized using the <code class="c-note bc">data-role</code> attribute. 
+              This attribute specifies the primary parent group as <code class="c-var bc">checkbox-list</code> while it's direct children are 
+              specified as <code class="c-var bc">checkbox</code>. Once this html structure is defined, the plugin will assume that all the children 
+              checkboxes belong to the parent <code class="c-var bc">checkbox-list</code> and this will force the plugin to set up a relationship amongst them based on the type of 
+              relationship effect applied. There are basically five types of effects available which are the 
+              <span class="c-func bc">"radio"</span>, 
+              <span class="c-func bc">"base"</span>, 
+              <span class="c-func bc">"slide"</span>, 
+              <span class="c-func bc">"rating"</span> and 
+              <span class="c-func bc">"polar"</span> effects. 
+              
+              These effects are discussed on the next page.
+            </div>
+            
+            <div class="nav-pane">
+              <a href="../docs/disable-checkbox.html" class="nav-btn-lt">
+                <i class="bi-arrow-left-circle"></i> 
+              </a> 
+              
+              <a href="../docs/radio-effect.html" class="nav-btn-rt">
+                <i class="bi-arrow-right-circle"></i> radio effect
+              </a> 
+            </div><br><br><br>
+
+        </section>
+        
+        <script src="../src/js/docs.js"></script>
+        <script src="../src/js/navscript.js"></script>
+        
+        <script>
+          let checkers = new CheckBox(true);
+
+          checkers.check({
+             
+            target: '[checkers]',
+            flip: true,
+            
+          });
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

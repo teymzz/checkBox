@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>checkbox</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../src/css/all.css">
+        <script src="../checkBox.js"></script>        
+    </head>
+    
+    <body>
+      <section class="side-bar">
+        <span class="close flex mid">&times;</span>
+        <div class="side-bar-fit">
+              <div class="nav-list" id="home">
+                  <a href="../index.html">Home</a>
+              </div>
+              <div class="nav-list" id="basic">
+                  <a href="../docs/basic.html">Basic</a>
+              </div>
+              <div class="nav-list" id="custom-selector">
+                  <a href="../docs/custom-selector.html">Custom Selector</a>
+              </div>
+              <div class="nav-list" id="markers">
+                  <a href="../docs/markers.html">Markers</a>
+              </div>
+              <div class="nav-list" id="single-marker">
+                  <a href="../docs/single-marker.html">Single Marker</a>
+              </div>
+              <div class="nav-list"id="double-markers">
+                  <a href="../docs/double-markers.html">Double Markers</a>
+              </div>
+              <div class="nav-list" id="custom-marker">
+                  <a href="../docs/custom-marker.html">Custom Marker</a>
+              </div>
+              <div class="nav-list" id="sizing-markers">
+                  <a href="../docs/sizing-markers.html">Sizing Markers</a>
+              </div>
+              <div class="nav-list" id="flipping-markers">
+                  <a href="../docs/flipping-markers.html">Flipping Markers</a>
+              </div>
+              <div class="nav-list" id="init-event">
+                  <a href="../docs/init-event.html">Init Event</a>
+              </div>
+              <div class="nav-list" id="toggle-event">
+                  <a href="../docs/toggle-event.html">Toggle Event</a>
+              </div>
+              <div class="nav-list" id="eager-loading">
+                  <a href="../docs/eager-loading.html">Eager Loading</a>
+              </div>
+              <div class="nav-list" id="fitting-images">
+                  <a href="../docs/fitting-images.html">Fitting Images</a>
+              </div>
+              <div class="nav-list" id="fitting-icons">
+                  <a href="../docs/fitting-icons.html">Fitting Icons</a>
+              </div>
+              <div class="nav-list" id="toggling-attribute">
+                  <a href="../docs/toggling-attribute.html">Toggling Attributes</a>
+              </div>
+              <div class="nav-list" id="toggling-attribute-advanced">
+                  <a href="../docs/toggling-attribute-advanced.html">Advanced Toggling</a>
+              </div>
+              <div class="nav-list" id="injecting-attribute">
+                  <a href="../docs/injecting-attributes.html">Injecting Attributes</a>
+              </div>
+              <div class="nav-list" id="adding-labels">
+                  <a href="../docs/adding-labels.html">Adding Labels</a>
+              </div>
+              <div class="nav-list" id="adding-colors">
+                  <a href="../docs/adding-colors.html">Adding Colors</a>
+              </div>
+              <div class="nav-list" id="disable-checkbox">
+                  <a href="../docs/disable-checkbox.html">Disable Checkbox</a>
+              </div>
+              <div class="nav-list" id="advanced-effects">
+                  <a href="../docs/advanced-effects.html">Advanced Effects</a>
+              </div>
+              <div class="nav-list" id="radio-effect">
+                  <a href="../docs/radio-effect.html">Radio Effect</a>
+              </div>
+              <div class="nav-list" id="base-effects">
+                  <a href="../docs/base-effects.html">Base Effect</a>
+              </div>
+              <div class="nav-list" id="base-reversal-effect">
+                  <a href="../docs/base-reversal-effect.html">Base Reversal Effect</a>
+              </div>
+              <div class="nav-list" id="slide-effect">
+                  <a href="../docs/slide-effect.html">Slide Effect</a>
+              </div>
+              <div class="nav-list" id="rating-effect">
+                  <a href="../docs/rating-effect.html">Rating Effect</a>
+              </div>
+              <div class="nav-list" id="polar-effect">
+                  <a href="../docs/polar-effect.html">Polar Effect</a>
+              </div>
+              <div class="nav-list" id="binding-parents">
+                  <a href="../docs/binding-parents.html">Binding Parent</a>
+              </div>
+              <div class="nav-list" id="fixing-cache">
+                  <a href="../docs/fixing-cache.html">Fixing Cache</a>
+              </div>
+              <div class="nav-list" id="cool-samples">
+                  <a href="../docs/cool-samples.html">Cool Samples</a>
+              </div>
+          </div>
+      </section>
+        <section class="bc-deeper-blue">
+
+            <div class="" style="font-size: 1.2em;"> <br>
+                <h1 style="color:#51ceff">CheckBox.js</h1> <br>
+                <h4 style="color:#51ceff">Eager Loading (Toggle)</h4> <br>
+            </div>
+            
+            <div class="">
+              Eager loading is necessary in situations where we need to preload a toggle 
+              event. From the previous tutorials, we have already seen the usage of the
+              <code class="c-note bc">init</code> callback option or the <code class="c-note bc">data-init</code> 
+              callback attribute. Also, we have learnt about the <code class="c-note bc">toggle</code> callback option or 
+              <code class="c-note bc">data-func</code> callback attribute. We can easily combine these features to create a 
+              smart eager loading for the custom checkbox toggling activity. The sample below shows how to achieve this :
+            </div> <br>
+            
+            <!-- checkbox -->
+            <div class="code">
+                <div class="flex">
+                    <div class="code-x">
+                        <span class="code-btn" rel="html">HTML</span>
+                        <span class="code-btn" rel="js">JS</span>
+                        <span class="code-btn" rel="view"><i class="bi-window"></i></span>
+                    </div>
+                    <div class="">
+                        <span class="copy-btn"><i class="bi-clipboard"></i></span>
+                    </div>
+                </div>
+<pre class="html active">
+<span class="tag">&lt;div <span>checkbox=""</span>&gt;</span>
+  <span class="tag">&lt;div <span>marker=""</span>&gt;&lt;/div&gt;</span> 
+  <span class="tag">&lt;div <span>marker=""</span>&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;input <span>type="<span>checkbox</span>" value="<span>foo</span>"</span>&gt; &lt;br&gt;</span> 
+<span class="tag">&lt;div <span>class="<span>response</span>"</span>&gt;&lt;/div&gt;</span>
+</pre>
+<pre class="js">
+<span class="tag">&lt;script&gt;</span>
+new <span class="func">CheckBox(</span>{
+    <span class="key">init</span>: <span class="func">function(</span><span class="arg">checkbox</span><span class="func">)</span> {
+        
+        let <span class="var">value</span> = <span class="arg">checkbox</span>.value;
+        let <span class="var">textField</span> = document.<span class="func">querySelector(<span class="string">".response"</span>)</span>;
+
+        if( <span class="arg">checkbox</span>.checked ) {
+            <span class="var">textField</span>.<span class="func">innerHTML = </span>`<span class="string">checkbox <span class="braces">${</span><span class="var">value</span><span class="braces">}</span> is: checked</span><span class="func"></span>`
+        } else {
+            <span class="var">textField</span>.<span class="func">innerHTML = </span>`<span class="string">checkbox <span class="braces">${</span><span class="var">value</span><span class="braces">}</span> is: unchecked</span><span class="func"></span>`
+        }
+
+    },
+    <span class="key">toggle</span>: <span class="func">function(</span><span class="arg">checkbox</span><span class="func">)</span> {
+        
+        <span class="arg">checkbox</span>.<span class="func">init(<span class="arg">checkbox</span>)</span>;
+
+    }
+}<span class="func">)</span>;
+<span class="tag">&lt;/script&gt;</span>    
+</pre>
+<pre class="view">
+                 <div class="checkbox-field flex mid-v">
+                  <div>
+                    <div checkers data-size="20px"> 
+                      <div marker="" style="background-color:white"></div>
+                      <div marker="" style="background-color:lime"></div>
+                    </div>
+                    <input type="checkbox" value="foo"> 
+                  </div>
+                  <div class="">
+                    &nbsp; <span class="response"></span>
+                  </div>
+                </div> 
+</pre>
+            </div> <br>           
+                     
+            
+            <div class="">
+              From the javascript above, we can see that the <code class="c-attr">checkbox</code> argument supplied into the <code class="c-bool">toggle()</code> callback option has access to the <code class="c-bool">init()</code> 
+              callback. This makes it easier to run the <code class="c-bool">init()</code> within the <code class="c-bool">toggle()</code> function rather than redefining it. This 
+              means that <code class="c-bool">init()</code> function will first run when the page loads and it will continue to run when the checkbox is toggled. This is also why the message in the response code screen above displays earlier 
+              before the checkbox is being clicked.
+            </div> <br>
+            
+            <div class="nav-pane">
+              <ul>
+                <li>
+                  <a class="link" href="../index.html">Home</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/basic.html">Basic</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/markers.html">Adding Markers</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/init-event.html">Init Event</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/toggle-event.html">Toggle Event</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/eager-loading.html">Eager Loading</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/adding-colors.html">Adding Colors</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/fitting-images.html">Fitting Images</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/fitting-icons.html">Fitting Icons</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/toggling-attribute.html">Toggling Attributes</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/injecting-attribute.html">Injecting Attribute</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/adding-labels.html">Adding Labels</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/adding-labels.html">Adding Colors</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/advanced-effects.html">Advanced Effects</a>
+                </li>                
+                <li>
+                  <a class="link" href="../docs/radio-effect.html">Radio Effect</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/base-effects.html">Base Effect</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/base-reversal-effect.html">Base Reversal Effect</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/slide-effect.html">Slide Effect</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/rating-effect.html">Rating Effect</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/polar-effect.html">Polar Effect</a>
+                </li>
+                <li>
+                  <a class="link" href="../docs/cool-samples.html">Cool Samples</a>
+                </li>
+              </ul>
+              <a href="../docs/toggle-event.html" class="nav-btn-lt">
+                <i class="bi-arrow-left-circle"></i> 
+              </a> 
+              
+              <a href="../docs/fitting-images.html" class="nav-btn-rt">
+                <i class="bi-arrow-right-circle"></i> fitting images
+              </a> 
+            </div><br><br><br>
+
+        </section>
+        
+        <script src="../src/js/docs.js"></script>
+        <script src="../src/js/navscript.js"></script>
+        
+        <script>
+          let checkers = new CheckBox(true);
+
+          checkers.check({
+             
+            target: '[checkers]',
+            flip: true,
+            init: (checkbox) => {
+               let responseField = document.querySelector('.response');
+  
+               responseField.innerHTML = `checkbox <span class="c-var">${checkbox.value}</span> is: `+(checkbox.checked ? 'checked' : 'unchecked');              
+            },
+            toggle: function(checkbox){
+              
+              checkbox.init(checkbox);
+             
+            }
+            
+          });
+
+        </script>
+    </body>
+</html>

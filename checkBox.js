@@ -4,6 +4,8 @@ class CheckBox {
 
         let checkbox = this;
 
+        checkbox.hardchecks = [];
+
         if(config === true) return checkbox;
         
         let defaults, customBoxes, init, toggle, assign, css, size, fsize, fit, checkEvent;
@@ -22,7 +24,7 @@ class CheckBox {
             toggle: function(){},
             flip: false,
             size: null,
-            fit: true,
+            fit: true
         };
 
         config = {...defaults, ...config};
@@ -60,9 +62,9 @@ class CheckBox {
 
             return item;
         }
-
+        
         /**
-         * 
+         * Resolves the width and height of custom box
          * @param {string|object} size 
          * @returns object
          */
@@ -136,10 +138,15 @@ class CheckBox {
                     return attr; //value of attribute
                 }
                 if(returnType !== 'array') return attr;
-                return attr = attr.split(separator);
+                return attr = attr.split(separator).filter((str) => str !== "");
             },
             checked: () => {
                 return (isCheckbox(element) && element.checked);
+            },
+            click: () => {
+                 //if(isCheckbox(element)){
+                    element.click();
+                 //}
             }
            };
         }
@@ -170,31 +177,38 @@ class CheckBox {
              */        
             animeAttr = (box, checked, assignAnime, markers) => {
 
+                // set default assign configuration
                 let iniAssign  = assign.attr;
                 let dataAssign = iniAssign;
 
                 if(assignAnime){
 
+                    // format local data-assign attribute
+
                     dataAssign = [];
 
                     //split handle string value
                     let attrSplit = assignAnime.split('|');
-
                     if((attrSplit.length === 1) && (iniAssign.length > 1)){
-                        assignAnime = attrSplit[0];
-                        dataAssign[0] = iniAssign[0];
-                        dataAssign[1] = iniAssign[1];
-                        dataAssign[2] = assignAnime;
+                        // assign [source, destination, <data-assign>]
+                        // data-assign: status
+                        assignAnime = attrSplit[0];    
+                        dataAssign[0] = iniAssign[0];  
+                        dataAssign[1] = iniAssign[1];   
+                        dataAssign[2] = assignAnime;  
                     }else if(attrSplit.length > 2){
-                        assignAnime = attrSplit[0];
-                        dataAssign[0] = attrSplit[0];
-                        dataAssign[1] = attrSplit[1];
+                        // assign [<data-assign[0]>,<data-assign[1]>]
+                        // data-assign [status, source, destination]
+                        assignAnime = attrSplit[0];    
+                        dataAssign[0] = attrSplit[1];  
+                        dataAssign[1] = attrSplit[2];
                         dataAssign[2] = assignAnime;
                     }
 
                 }
 
                 let attrs = dataAssign;
+
                 if(attrs.length > 1){
                     //when three argument supplied source, dest, type
                     let sourceAttr = attrs[0]; //source attribute
@@ -204,7 +218,6 @@ class CheckBox {
                     let animator = assignAnime || attrs[2];
                     let animateMarker = false;
                     markers = markers || []
-
                     if(attrs.length > 2){
                         let animations = ['checked','unchecked','both','false',':markers',':marker1',':marker2'];
                         if(animations.includes(animator)){
@@ -217,9 +230,9 @@ class CheckBox {
                     if(animated !== 'false'){
                         if(animated === 'both'){
                             animate = true;
-                        }else if(checked && animated === 'checked'){
+                        }else if(checked && (animated === 'checked')){
                             animate = true;
-                        }else if(!checked && animated === 'unchecked'){
+                        }else if(!checked && (animated === 'unchecked')){
                             animate = true;
                         }else if(animated === ':markers'){
                             animate = true;
@@ -277,38 +290,58 @@ class CheckBox {
                         //set default destination values
                         CDestValue = at(box, destAttr).attrvals(' ');
 
-                        if(checked){
-                            if(sourceValue2){
+                        if(animated === 'both'){
+
+                            //resolve for "both" modifer
+                            if(sourceValue) {
                                 //remove source value 1 from CDestValue
                                 CNewDestVal = CDestValue.filter(value => !sourceValue.includes(value));
-
-                                // add source value 2 to destination attribute
-                                CNewDestVal = CNewDestVal.concat(sourceValue2);
-                                appliedSource = sourceValue2;
-                            } else {
-
                                 // add source value 1 to destination attribute
-                                CNewDestVal = CDestValue.concat(sourceValue);
-                                appliedSource = sourceValue;
-
-                            }
-                        }else{
-
-                            if(sourceValue2){
-                            
-                                // remove source value 2 from destination attribute
-                                CNewDestVal = CDestValue.filter(value => !sourceValue2.includes(value));
-                                
-                                //add source value 1 to checkerDestValue (CNewDestVal)
                                 CNewDestVal = CNewDestVal.concat(sourceValue);
-                                appliedSource = sourceValue;
-
-                            }else{
-                                // remove source value 1 from destination attribute
-                                CNewDestVal = CDestValue.filter(value => !sourceValue.includes(value));
+                                appliedSource = CNewDestVal;
                             }
 
+                        } else {
+
+                            let modchecked = checked;
+                            modchecked = (animated === 'unchecked')? !checked : checked;
+
+                            //resolve "checked" and "unchecked" modifers
+                            if(modchecked){
+                                if(sourceValue2){
+                                    //remove source value 1 from CDestValue
+                                    CNewDestVal = CDestValue.filter(value => !sourceValue.includes(value));
+
+                                    // add source value 2 to destination attribute
+                                    CNewDestVal = CNewDestVal.concat(sourceValue2);
+                                    appliedSource = sourceValue2;
+                                } else {
+
+                                    // add source value 1 to destination attribute
+                                    CNewDestVal = CDestValue.concat(sourceValue);
+                                    appliedSource = sourceValue;
+
+                                }
+                            }else{
+
+                                if(sourceValue2){
+                                
+                                    // remove source value 2 from destination attribute
+                                    CNewDestVal = CDestValue.filter(value => !sourceValue2.includes(value));
+                                    
+                                    //add source value 1 to checkerDestValue (CNewDestVal)
+                                    CNewDestVal = CNewDestVal.concat(sourceValue);
+                                    appliedSource = sourceValue;
+
+                                }else{
+                                    // remove source value 1 from destination attribute
+                                    CNewDestVal = CDestValue.filter(value => !sourceValue.includes(value));
+                                }
+
+                            }
                         }
+
+
 
                         //animation for custom box
 
@@ -337,24 +370,33 @@ class CheckBox {
                             //set source values
                             M1SourceValue = sourceValue; //marker1 source value
                             M2SourceValue = sourceValue2 || sourceValue; //marker 2 source value
-
+                            
                             //set default destination values
                             marker1Val = at(markers[0], destAttr).attrvals(' ');
+
                           
                             if(markers.length > 1) {
                                 marker2Val = at(markers[1], destAttr).attrvals(' ');
                             }
-                     
+
                             if(checked){
 
                                 if(animateMarker === 1){
-                                    //add source to marker 1
+                                    // marker 1 is hidden, remove value from marker 1
+                                    
+                                    // //add source to only marker 1
                                     M1NewDestVals = M1SourceValue.filter(val => !marker1Val.includes(val));    
                                     M1NewDestVals = marker1Val.concat(M1NewDestVals);
+                                     
+                                    //remove source from marker 2 (main action)
+                                    M2NewDestVals = marker2Val.filter(val => !M2SourceValue.includes(val));                                    
                                 }else if(animateMarker === 2){
-                                    //add source to marker 2
-                                    M2NewDestVals = M2SourceValue.filter(val => !marker2Val.includes(val));    
+                                    //add source to only marker 2 
+                                    M2NewDestVals = M2SourceValue.filter(val => !marker2Val.includes(val) && (val !== ''));    
                                     M2NewDestVals = marker2Val.concat(M2NewDestVals);
+
+                                    //remove source from marker 1
+                                    M1NewDestVals = marker1Val.filter(val => !M1SourceValue.includes(val));
                                 }else if(animateMarker === true){
                                     //add source to marker 2
                                     M2NewDestVals = M2SourceValue.filter(val => !marker2Val.includes(val));    
@@ -366,23 +408,29 @@ class CheckBox {
 
                             }else{
 
+                                // Resolve this when checkbox is unchecked
+
                                 if(animateMarker === 1){
+                                    
+                                    //marker 1 is visible, add attribute to marker 1
 
-                                    //add source to marker 1
-                                    M1NewDestVals = M1SourceValue.filter(val => !marker1Val.includes(val));    
-                                    M1NewDestVals = marker1Val.concat(M1NewDestVals);
+                                    // add source to marker 2
+                                    // M2NewDestVals = M2SourceValue.filter(val => !marker2Val.includes(val));    
+                                    // M2NewDestVals = marker2Val.concat(M2NewDestVals);
 
-                                    //remove source from marker 2
-                                    M2NewDestVals = marker2Val.filter(val => !M2SourceValue.includes(val));   
+                                    //remove source from marker 1
+                                    M1NewDestVals = marker1Val.filter(val => !M1SourceValue.includes(val));   
 
                                 }else if(animateMarker === 2){
 
-                                    //add source to marker 2
-                                    M2NewDestVals = M2SourceValue.filter(val => !marker2Val.includes(val));    
-                                    M2NewDestVals = marker2Val.concat(M2NewDestVals);
+                                    //marker 2 is hidden, remove source value from marker 2
 
-                                    //remove source from marker 1
-                                    M1NewDestVals = marker1Val.filter(val => !M1SourceValue.includes(val));                                    
+                                    // add source value to marker 1
+                                    // M1NewDestVals = M1SourceValue.filter(val => !marker1Val.includes(val));    
+                                    // M1NewDestVals = marker1Val.concat(M1NewDestVals);
+
+                                    //remove source value from marker 2
+                                    M2NewDestVals = marker2Val.filter(val => !M2SourceValue.includes(val));                                    
 
                                 }else if(animateMarker === true){
                                     //add source to marker 1
@@ -390,19 +438,20 @@ class CheckBox {
                                     M1NewDestVals = marker1Val.concat(M1NewDestVals);
 
                                     //remove source from marker 2
-                                    M2NewDestVals = marker2Val.filter(val => !M2SourceValue.includes(val));
+                                    if(marker2Val) M2NewDestVals = marker2Val.filter(val => !M2SourceValue.includes(val));
                                     
                                 }else{
                                     console.error(`Markers must be 2 when set as ':markers'`)
                                 }   
 
                             }
-                            
+
                             //set marker 1 and marker 2 new values ... 
                             if(M1NewDestVals) {
                                 markers[0].setAttribute(destAttr, M1NewDestVals.join(' '));
                             }
-                            if(M2NewDestVals) {
+                            if(M2NewDestVals) {                            
+                                //console.log(M2NewDestVals.join(' '));
                                 markers[1].setAttribute(destAttr, M2NewDestVals.join(' '));
                             }
         
@@ -432,6 +481,9 @@ class CheckBox {
                 checker.value = input.value;
                 checker.label = customBox.getAttribute('data-label');
                 checker.color = customBox.getAttribute('data-color');
+                checker.listId = 0;
+                checker.checkedBoxes = 0;
+
 
                 let callback = customBox.getAttribute('data-func');
                 
@@ -441,8 +493,18 @@ class CheckBox {
                 let mColor = false;
 
                 let customParent = customBox.parentNode.closest('[data-role="checkbox"]');
-                let customLabel  = (customParent)? customParent.nextElementSibling : undefined;
-                
+                let customLabel  = (customParent)? customParent.nextElementSibling : undefined; 
+
+                if(customParent){
+                    checker.parent = customParent;
+                    let grandParent = customParent.parentNode.closest('[data-role="checkbox-list"]');
+                    if(grandParent){
+                        checker.parentSuper = grandParent;
+                        checker.listId = Array.from(grandParent.children).indexOf(customParent); 
+                        checker.checkedBoxes = grandParent.querySelectorAll('input:checked').length
+                    }
+                }
+
                 if(customLabel && (customLabel.getAttribute('data-access') !== 'label')){
                     customLabel = undefined;
                 }
@@ -515,11 +577,13 @@ class CheckBox {
                     if(label2){
                         label.textContent = label2;
                     }
-                    if(label && color2) label.style.color = color2;  
-                    if(mColor && marker2) {
+                    if(label && color2) label.style.color = color2; 
+                    if(mColor) {
+                      if(marker2) {
                         marker2.style.color = color2;
-                    }else if(mColor && marker1 && (color2 !== marker1.style.color)){
+                      }else if(marker1 &&  (color2 !== marker1.style.color)){
                         marker1.style.color = color2;
+                      }
                     }
                 }else{
                     //run for uncheck 
@@ -535,7 +599,7 @@ class CheckBox {
                         label.textContent = label1;
                     }
                     if(label && color1) label.style.color = color1;
-                    if(mColor && marker1) marker1.style.color = color1;
+                    if((mColor=== true) && marker1) marker1.style.color = color1;
                 }
 
                 if(typeof animeAttr === 'function'){
@@ -545,7 +609,7 @@ class CheckBox {
                 checker.init = init;
 
                 if(typeof toggle === 'function') toggle(checker);
-
+                
                 if(callback) {
                     window[callback](checker);
                 }
@@ -562,15 +626,25 @@ class CheckBox {
 
         checkLists.forEach(checkList => {
 
-            //get all checkboxes in the box...
+            //get all custom checkboxes in the checkbox list...
             let customLists = checkList.querySelectorAll(checkbox.target);
 
             if(customLists.length > 0){
                 
                 checkList.setAttribute('initialized', true);
                 let checkListBind = at(checkList, 'data-bind');
+                let dataBindValue = checkListBind.value().split("-");
+                let isSlide = false, slideTime = 2500;
                 
-                if(checkListBind.is('radio')){
+                if(dataBindValue.length === 2){
+                  isSlide = dataBindValue['0'] === 'slide';
+                  slideTime = parseInt(dataBindValue['1']);
+                  if(slideTime < 20) slideTime = 2500;
+                }else if (checkListBind.is('slide')) {
+                  isSlide = true;
+                }
+                
+                if(checkListBind.is('radio') || isSlide){
 
                     customLists.forEach((customList, index) => {
                         
@@ -608,11 +682,39 @@ class CheckBox {
                                     mainChecker.click();
                                 }
                             }
-    
-    
                         })
-    
+                        
                     })
+                    
+                    if(isSlide) {
+                        //let autoSwitch = checkList; //checkbox-list
+                        //let autoCheckers = checkList.querySelectorAll('[data-role="checkbox"');
+                        let timeout;
+                        
+                        function autoSwitch() {
+                            
+                            let checkedBox = checkList.querySelector('[data-role="checkbox"][checked="checked"]') 
+                            let checkedIndex = Array.from(checkList.children).indexOf(checkedBox);
+                            if(customLists.length > 0) {
+                              if((checkedIndex + 1) === customLists.length){
+                                  checkedIndex = 0;
+                              } else {
+                                checkedIndex = checkedIndex + 1;
+                              }
+                              customLists[checkedIndex].addEventListener('click', function(){
+                                if(timeout) clearTimeout(timeout);
+                                timeout = setTimeout(() => {
+                                    autoSwitch()
+                                }, slideTime)
+                              });
+                              customLists[checkedIndex].click();
+                            }
+                        }
+                        
+                        timeout = setTimeout(() => { autoSwitch(); }, 1000);
+                      
+                    }
+                    
                 }else if(checkListBind.is('base')){
                     
                     customLists.forEach((customList, index) => {
@@ -643,7 +745,7 @@ class CheckBox {
     
                                         subChecker = isCheckbox(exToggles[exToggle].nextElementSibling);
                                         
-                                        if(subChecker && !subChecker.disabled){
+                                        if(subChecker && !subChecker.disabled && !checkbox.hardchecks.includes(subChecker)){
                                           
                                           let subCheckerBind = at(subChecker, 'data-bind');
                                           
@@ -677,7 +779,7 @@ class CheckBox {
                               } else {
                                   
                                   //handle other boxes
-  
+
                                   if(at(mainChecker,'data-bind').not(['free'])){
                                       
                                       let isReverse = at(mainChecker,'data-bind').is('reverse');
@@ -761,7 +863,7 @@ class CheckBox {
                                       }
                                       
                                   }else{
-                                      if(!mainChecker.disabled){
+                                      if(!mainChecker.disabled && !checkbox.hardchecks.includes(mainChecker)){
                                           mainChecker.click();
                                       }
                                   }
@@ -773,6 +875,42 @@ class CheckBox {
                         })
                         
                     })
+                }else if(checkListBind.is('rating')){
+                  
+                    //add touch sliding effects here 
+
+                    customLists.forEach((customList, index) => {
+
+                        customList.addEventListener('click', function(){
+                            
+                            let exToggles = {...customLists};
+                            
+                            let boxes = Object.keys(exToggles).length;
+                               
+                           
+                            for(let i = boxes - 1; i > index; i--){
+                              let checkboxItem = exToggles[i].nextElementSibling;
+                              if(checkboxItem.checked){
+                                customLists[index].setAttribute('check-pause', 'true')
+                                //get next element item
+                                customLists[i].click();
+                              }
+                            }
+                            
+                           for(let i = 0; i <= index; i++){
+                              let checkboxItem = exToggles[i].nextElementSibling;
+                              if(!checkboxItem.checked){
+                                customLists[i].click();
+                              }
+                            }
+                           
+
+                        })
+                        
+                        touchSlide(checkList, checkbox.target)
+
+                    })
+
                 }
                 
             }
@@ -871,7 +1009,6 @@ class CheckBox {
 
                     let style, styleCss = ''; let id = btoa(`${checkbox.target} ${checkbox.marker}`);
 
-                    // ${checkbox.target} ${checkbox.marker} {
                     let styleExists = document.querySelector(`style[checkbox="${id}"]`);
 
                     if(!styleExists){
@@ -888,7 +1025,7 @@ class CheckBox {
     
                         if(fsize){
                             styleCss += `
-                                font-size: ${customFSize};\
+                                font-size: ${customFSize};
                             `
                         }
     
@@ -925,6 +1062,11 @@ class CheckBox {
                 if((marker.length > 0)){
                     marker1 = marker[0];
                     marker2 = marker[1];
+                } else {
+                    if(customSize) {
+                        if(customSize.x !== '') customBox.style.width = customSize.x;
+                        if(customSize.y !== '') customBox.style.height = customSize.y;
+                    }
                 }
 
                 if(marker1){
@@ -941,6 +1083,8 @@ class CheckBox {
                 }
 
                 if(input.disabled){
+                    checkbox.hardchecks.push(input);
+                    checkbox.hardchecks.push(customBox);
                     customBox.setAttribute('disabled', 'true');
                     if(customParent) customParent.setAttribute('disabled', 'true');
                 }
@@ -962,14 +1106,14 @@ class CheckBox {
                     if(color2 && label1) label.style.color = color2;  
                     
                     //apply color to markers if first or second color is defined
-                    if(color1 && marker1) {
+                    if(color1 && marker1 && mColor) {
                         if(!color2){
                             marker1.style.color = color1;
                         }else{
                             marker1.style.color = color2;
                         }
                     }
-                    if(color2 && marker2) marker2.style.color = color2;
+                    if(color2 && marker2 && mColor) marker2.style.color = color2;
 
                 }else{
                     customBox.setAttribute('checked', 'unchecked');
@@ -984,23 +1128,38 @@ class CheckBox {
                     }
 
                     if(color1 && label) label.style.color = color1;     
-                    if(color1 && marker1) marker1.style.color = color1;
-                    if(color2 && marker2) marker2.style.color = color2;
+                    if(color1 && marker1 && mColor) marker1.style.color = color1;
+                    if(color2 && marker2 && mColor) marker2.style.color = color2;
+                }
+                
+                let grandParent, checkedBoxes;
+                
+                // get checkbox-list and selections
+                if(customParent){
+                  grandParent = customParent.closest('[data-role="checkbox-list"]');
+                  if(grandParent) {
+                    checkedBoxes = grandParent.querySelectorAll('input:checked').length
+                  }
+                }
+                
+                let properties = {
+                  native:input, 
+                  custom: customBox, 
+                  marker: marker, 
+                  checked: (input.checked), 
+                  fit: checkbox.fit, 
+                  flip: flip, 
+                  value: (input.value),
+                  checkList: grandParent, //checkbox list
+                  parent: customParent, //data role checkbox
+                  checkedBoxes: checkedBoxes,                  
                 }
 
                 if(typeof init === 'function'){
                     if(typeof animeAttr == 'function'){
                         animeAttr(customBox, input.checked, customBox.getAttribute('data-assign'), marker)
                     }
-                    init({
-                        native:input, 
-                        custom: customBox, 
-                        marker: marker, 
-                        checked: (input.checked), 
-                        fit: checkbox.fit, 
-                        flip: flip, 
-                        value: (input.value)
-                    });
+                    init(properties);
                 }else if (init === true) {
                     if(typeof animeAttr == 'function'){
                         animeAttr(customBox, input.checked, customBox.getAttribute('data-assign'), marker)
@@ -1008,21 +1167,12 @@ class CheckBox {
                 }
 
                 if(eager && callback !== ''){
-                    window[callback]({
-                        native:input, 
-                        custom: customBox, 
-                        marker: marker, 
-                        checked: (input.checked), 
-                        disabled: (input.disabled), 
-                        fit: checkbox.fit, 
-                        flip: flip, 
-                        value: (input.value)
-                    })
+                    window[callback](properties)
                 }
 
                 input.addEventListener('click', function(e){
-                    
-                    if(input.getAttribute('disabled')){
+
+                    if(input.getAttribute('disabled')  || checkbox.hardchecks.includes(input)){
                         e.preventDefault();
                     }else{
                         if(!this.getAttribute('selection')) {
@@ -1036,11 +1186,65 @@ class CheckBox {
                 });
 
                 customBox.addEventListener('click', function(){
+                    
+                    
+                    if(grandParent){
+
+                        checkedBoxes = properties.checkedBoxes;
+                        
+                        //checkedBoxes = grandParent.querySelectorAll('input:checked').length
+         
+                        if(at(grandParent).hasAttr('data-max')) {
+                            let max, callback;
+
+                            if(at(grandParent).hasAttr('data-maxim')){
+                                callback = at(grandParent,'data-maxim').value();
+                            }
+
+                            max = parseInt(at(grandParent, 'data-max').value()); 
+                            if((checkedBoxes === max) && !at(customBox,'checked').is('checked')) {
+
+                                if(typeof window[callback] === 'function') {
+                                    let props = {};
+                                    props.checked = grandParent.querySelectorAll(checkbox.target+'[checked="checked"]');
+                                    props.unchecked = grandParent.querySelectorAll(checkbox.target+':not([checked="checked"])');
+                                    props.max = true;
+                                    window[callback](props);
+                                }
+                                return false;
+                                
+                            } else {
+
+                                if(typeof window[callback] === 'function') {
+                                    let props = {};
+                                    props.checked = grandParent.querySelectorAll(checkbox.target+'[checked="checked"]');
+                                    props.unchecked = grandParent.querySelectorAll(checkbox.target+':not([checked="checked"])');
+                                    props.max = false;
+                                    window[callback](props);
+                                }                                
+
+                            }
+                            
+                            // else if (checkedBoxes < max){
+                                 
+                            //         if(typeof window[callfront] === 'function') {
+                            //             let props = {};
+                            //             props.checked = grandParent.querySelectorAll(checkbox.target+'[checked="checked"]');
+                            //             props.unchecked = grandParent.querySelectorAll(checkbox.target+':not([checked="checked"])');
+                            //             window[callfront](props);
+                            //         } 
+                            // }
+                        }
+                    }
                     //if not e-prev defined
-                    if(input.getAttribute('e-prev') === null){
-                        if(!at(customBox).hasAttr('controllers')) input.click();
-                        input.setAttribute('selection', 'true');
-                        setTimeout(() => input.removeAttribute('selection'), 50);
+                    if(!at(customBox, 'check-pause').is('true')){
+                      if(input.getAttribute('e-prev') === null){
+                          if(!at(customBox).hasAttr('controllers')) input.click();
+                          input.setAttribute('selection', 'true');
+                          setTimeout(() => input.removeAttribute('selection'), 50);
+                      }
+                    }else{
+                      customBox.removeAttribute('check-pause');
                     }
                 })
 
@@ -1108,6 +1312,113 @@ class CheckBox {
             }
 
         })
+        
+        // handle touch sliding animation ..... 
+        function touchSlide(ratebind, target){
+          
+            const rateboxes = ratebind.querySelectorAll('[data-role="checkbox"]');
+            let startCheckbox; let mousePressed;
+
+            rateboxes.forEach((ratebox) => {
+              ratebox.addEventListener('touchstart', handleTouchStart);
+              ratebox.addEventListener('touchmove', handleTouchMove);
+              ratebox.addEventListener('mousedown', handleTouchStart);
+              ratebox.addEventListener('mousemove', handleTouchMove);
+              ratebox.addEventListener('mouseup', handleMouseEnd);
+            });
+
+            function handleTouchStart(event) {
+              startCheckbox = event.currentTarget;
+              let customBox = startCheckbox.querySelector(target);
+              mousePressed = true;
+              if((getIndex(startCheckbox) === 0) && !isChecked(customBox)){ 
+                // customBox.click();********************************************
+              }
+            }
+
+            function handleTouchMove(event) {
+              event.stopPropagation();
+              let currentCheckbox; let customBox;
+
+              if(event.touches){
+                 currentCheckbox = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
+                }else{
+                  if(mousePressed) {
+                      currentCheckbox = document.elementFromPoint(event.clientX, event.clientY);
+                  }
+              }
+              if(currentCheckbox) customBox = currentCheckbox.querySelector(target);
+              
+              if (customBox && (currentCheckbox !== startCheckbox)) {
+                
+                const checkex = customBox.nextElementSibling;
+                let front = isForwardSlide(startCheckbox, currentCheckbox);
+                let backs = isBackwardSlide(startCheckbox, currentCheckbox);
+                let neutral = (front === false) && (backs === false);
+                
+                //startCheckbox = currentCheckbox;
+                let checkNum = getIndex(currentCheckbox);
+                // permit activity: if item is checkbox
+                let isCheckBox = currentCheckbox.getAttribute('data-role') === 'checkbox';
+                
+                if(isCheckBox) {
+                  startCheckbox = currentCheckbox;
+
+                    if(front && !isChecked(customBox)){
+                      for(let i = 0; i < checkNum; i++){
+                        let ltCheck = rateboxes[i].querySelector(target)
+                        if(!ltCheck.nextElementSibling.checked){
+                          ltCheck.click()
+                        }
+                      }
+                      customBox.click();
+                     
+                    } else if (backs && !neutral){
+                      for(let i = rateboxes.length - 1; i > checkNum; i--){
+                        let ltCheck = rateboxes[i].querySelector(target)
+                        if(ltCheck.nextElementSibling.checked){
+                          ltCheck.click()
+                        }
+                      }
+                    }
+                  
+                }
+
+              }
+              
+            }
+
+            function handleMouseEnd(event){
+                mousePressed = false;
+            }
+
+            function isForwardSlide(startCheckbox, currentCheckbox) {
+              // Logic to determine if the slide is forward
+              return currentCheckbox.offsetLeft > startCheckbox.offsetLeft;
+            }
+            
+            function isBackwardSlide(startCheckbox, currentCheckbox) {
+              // Logic to determine if the slide is backward
+              //return startCheckbox.offsetLeft > currentCheckbox.offsetLeft;
+              // Get the index of the current and start checkboxes
+              const currentIndex = getIndex(currentCheckbox);
+              const startIndex = getIndex(startCheckbox);
+            
+              // Logic to determine if the slide is forward
+              return currentIndex < startIndex;
+            }
+            
+            function isChecked(customBox) {
+              // Logic to determine if the custom box has the checked attribute
+              return customBox.getAttribute('checked') === "checked";
+            }
+         
+            // Helper function to get the index of the checkbox in its parent
+            function getIndex(checkbox) {
+              return Array.from(checkbox.parentNode.children).indexOf(checkbox);
+            }
+          
+        }
         
     }
 

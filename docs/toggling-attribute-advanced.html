@@ -1,0 +1,352 @@
+<html lang="en">
+  
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>checkbox</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/all.css">
+    <script src="../checkBox.js"></script>   
+    <style>
+        [checkers] {
+            width: fit-content;
+            border-radius: 5px;    
+            border: solid; 
+            padding: 4px;    
+        }
+
+        [checkers] > [marker] {
+            width: 20px;
+            height: 20px;    
+            background-color: transparent;
+            transition: width .5s ease-in-out, 
+                        background-color .5s ease-in-out;
+        }
+
+        /* apply this when unchecked */
+        .bar[checkers] > [marker] { 
+            width: 30px;
+            background-color: red;
+        }
+
+        /* apply this when checked */
+        .baz[checkers] > [marker] {
+            width: 50px;
+            background-color: lime;
+        }
+    </style>    
+  </head>
+  <body>
+    <section class="side-bar">
+      <span class="close flex mid">&times;</span>
+      <div class="side-bar-fit">
+            <div class="nav-list" id="home">
+                <a href="../index.html">Home</a>
+            </div>
+            <div class="nav-list" id="basic">
+                <a href="../docs/basic.html">Basic</a>
+            </div>
+            <div class="nav-list" id="custom-selector">
+                <a href="../docs/custom-selector.html">Custom Selector</a>
+            </div>
+            <div class="nav-list" id="markers">
+                <a href="../docs/markers.html">Markers</a>
+            </div>
+            <div class="nav-list" id="single-marker">
+                <a href="../docs/single-marker.html">Single Marker</a>
+            </div>
+            <div class="nav-list"id="double-markers">
+                <a href="../docs/double-markers.html">Double Markers</a>
+            </div>
+            <div class="nav-list" id="custom-marker">
+                <a href="../docs/custom-marker.html">Custom Marker</a>
+            </div>
+            <div class="nav-list" id="sizing-markers">
+                <a href="../docs/sizing-markers.html">Sizing Markers</a>
+            </div>
+            <div class="nav-list" id="flipping-markers">
+                <a href="../docs/flipping-markers.html">Flipping Markers</a>
+            </div>
+            <div class="nav-list" id="init-event">
+                <a href="../docs/init-event.html">Init Event</a>
+            </div>
+            <div class="nav-list" id="toggle-event">
+                <a href="../docs/toggle-event.html">Toggle Event</a>
+            </div>
+            <div class="nav-list" id="eager-loading">
+                <a href="../docs/eager-loading.html">Eager Loading</a>
+            </div>
+            <div class="nav-list" id="fitting-images">
+                <a href="../docs/fitting-images.html">Fitting Images</a>
+            </div>
+            <div class="nav-list" id="fitting-icons">
+                <a href="../docs/fitting-icons.html">Fitting Icons</a>
+            </div>
+            <div class="nav-list" id="toggling-attribute">
+                <a href="../docs/toggling-attribute.html">Toggling Attributes</a>
+            </div>
+            <div class="nav-list" id="toggling-attribute-advanced">
+                <a href="../docs/toggling-attribute-advanced.html">Advanced Toggling</a>
+            </div>
+            <div class="nav-list" id="injecting-attribute">
+                <a href="../docs/injecting-attributes.html">Injecting Attributes</a>
+            </div>
+            <div class="nav-list" id="adding-labels">
+                <a href="../docs/adding-labels.html">Adding Labels</a>
+            </div>
+            <div class="nav-list" id="adding-colors">
+                <a href="../docs/adding-colors.html">Adding Colors</a>
+            </div>
+            <div class="nav-list" id="disable-checkbox">
+                <a href="../docs/disable-checkbox.html">Disable Checkbox</a>
+            </div>
+            <div class="nav-list" id="advanced-effects">
+                <a href="../docs/advanced-effects.html">Advanced Effects</a>
+            </div>
+            <div class="nav-list" id="radio-effect">
+                <a href="../docs/radio-effect.html">Radio Effect</a>
+            </div>
+            <div class="nav-list" id="base-effects">
+                <a href="../docs/base-effects.html">Base Effect</a>
+            </div>
+            <div class="nav-list" id="base-reversal-effect">
+                <a href="../docs/base-reversal-effect.html">Base Reversal Effect</a>
+            </div>
+            <div class="nav-list" id="slide-effect">
+                <a href="../docs/slide-effect.html">Slide Effect</a>
+            </div>
+            <div class="nav-list" id="rating-effect">
+                <a href="../docs/rating-effect.html">Rating Effect</a>
+            </div>
+            <div class="nav-list" id="polar-effect">
+                <a href="../docs/polar-effect.html">Polar Effect</a>
+            </div>
+            <div class="nav-list" id="binding-parents">
+                <a href="../docs/binding-parents.html">Binding Parent</a>
+            </div>
+            <div class="nav-list" id="fixing-cache">
+                <a href="../docs/fixing-cache.html">Fixing Cache</a>
+            </div>
+            <div class="nav-list" id="cool-samples">
+                <a href="../docs/cool-samples.html">Cool Samples</a>
+            </div>
+        </div>
+    </section>
+        <section class="bc-deeper-blue">
+            <div class="" style="font-size: 1.2em;"> <br>
+                <h1 style="color:#51ceff">CheckBox.js</h1> <br>
+                <h4 style="color:#51ceff">Toggling Attributes (Advanced)</h4> <br>
+            </div>
+        
+            <div class="">
+                Previously, we have seen how to toggle a source attribute's value into a destination attribute. However, 
+                in the previous discussion, we only applied a single source attribute. The checkbox plugin provides an easy 
+                way to define a maximum of two values for the source attribute which are separated by pipe. In this situation, 
+                the first value defines a value that is expected to be assigned when the checkbox is checked while the second value 
+                will be applied when the checkbox is unchecked. To understand this better, consider the html structure below:
+            </div> <br>
+      
+            
+            <div class="code">
+                <div class="flex">
+                    <div class="code-x">
+                        <span class="code-btn" rel="html">HTML</span>
+                        <span class="code-btn" rel="css">CSS</span>
+                    </div>
+                    <div class="">
+                        <span class="copy-btn"><i class="bi-clipboard"></i></span>
+                    </div>
+                </div>
+<pre class="active"><span class="tag">&lt;div <span class="func">checkbox source="<span class="var">foo|bar</span>" data-assign="<span class="var">checked|source|class</span>"</span>&gt;</span>
+  <span class="tag">&lt;div <span class="func">marker=""</span>&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;input <span class="func">type="<span class="var">checkbox</span>"</span>&gt;</span>
+</pre>
+<pre class="css"><span class="key">[checkers]</span> <span class="braces">{</span>
+    <span class="var">width</span>: fit-content;
+    <span class="var">border-radius</span>: 5px;    
+    <span class="var">border</span>: solid; 
+    <span class="var">padding</span>: 4px;    
+<span class="braces">}</span>
+
+<span class="key">[checkers] &gt; [marker]</span> <span class="braces">{</span>
+    <span class="var">width</span>: 20px;
+    <span class="var">height</span>: 20px;    
+    <span class="var">background-color</span>: transparent;
+    <span class="var">transition</span>: width .5s ease-in-out, 
+                background-color .5s ease-in-out;
+<span class="braces">}</span>
+
+<span class="key">[checkers] &gt; [marker]</span> <span class="braces">{</span>
+    <span class="var">width</span>: 50px;
+    <span class="var">background-color</span>: green;
+<span class="braces">}</span>
+
+<span class="key">.bar[checkers] &gt; [marker]</span> <span class="braces">{</span>
+    <span class="var">width</span>: 30px;
+    <span class="var">background-color</span>: red;
+<span class="braces">}</span>
+</pre>
+            </div> <br>     
+      
+            <div class="">
+                From the sample html above, we have a <code class="c-note bc">source</code> attribute that contains two destination values which are <code class="c-var bc">"foo"</code> and 
+                <code class="c-var bc">"bar"</code>. When the checkbox is checked, the <code class="c-var bc">foo</code> value will be assigned into a <code class="c-note bc">class</code> attribute but if 
+                the checkbox is unchecked, the <code class="c-var bc">bar</code> value will be assigned instead. 
+                The <code class="c-note bc">data-assign</code> attribute uses the modifier option <i class="c-var bc">“checked”</i> to specify that the destination value should be assigned on the custom checkbox itself. 
+                The type of modifier option applied will determine how the toggling effect is resolved. We also applied some simple css for width animation. The response will be similar to that which is shown below
+            </div> <br>
+        
+            <div class="code">
+                <div class="flex">
+                    <div class="code-x">
+                        <span class="code-btn" rel="view"><i class="bi-window"></i></span>
+                    </div>
+                </div>
+                <div class="checkbox-field">
+                  <div>
+                      <div checkers="" class="foo" data-switch="bar|baz" data-assign="checked|data-switch|class"> 
+                          <div marker=""></div>
+                      </div>
+                      <input type="checkbox" value="foo"> 
+                  </div>
+                </div>
+            </div> <br> 
+
+
+            <div class="">
+                This toggling effect above is usually applied in cases where we need to apply a smooth toggling effect. For example, the major 
+                use case of this feature can been seen when applying css animations especially from external libraries. Let's consider 
+                more sample structures with different modifiers below :
+            </div> <br>
+
+            <div class="code-box">
+                
+                <div class="code">
+                    <div class="flex">
+                        <div class="">
+                           <i class="bi-hash"></i> modifier (unchecked)
+                        </div>
+                        <div class="">
+                            <span class="copy-btn"><i class="bi-clipboard"></i></span>
+                        </div>
+                    </div>
+<pre class="active"><span class="tag">&lt;div <span class="func">checkbox source="<span class="var">foo|bar</span>" data-assign="<span class="var">unchecked|source|class</span>"</span>&gt;</span>  
+    <span class="tag">&lt;div <span class="func">marker=""</span>&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;input <span class="func">type="<span class="var">checkbox</span>"</span>&gt;</span>
+</pre>
+                </div> <br> 
+
+                <div class="">
+                    In the sample above, the <code class="c-var bc">"unchecked"</code> modifier option will switch the behaviour of the <code class="c-note bc">source</code> attribute such that 
+                    <code class="c-var bc">"foo"</code> will be toggled into the checkbox's <code class="c-note bc">class</code> attribute when the checkbox is checked while 
+                    <code class="c-var bc">"bar"</code> will be toggled in when the checkbox is unchecked
+                </div>
+
+            </div> <br>
+
+            <div class="code-box">
+                <div class="code">
+                    <div class="flex">
+                        <div class="">
+                           <i class="bi-hash"></i> modifier (:marker1)
+                        </div>
+                        <div class="">
+                            <span class="copy-btn"><i class="bi-clipboard"></i></span>
+                        </div>
+                    </div>
+<pre class="active"><span class="tag">&lt;div <span class="func">checkbox source="<span class="var">foo|bar</span>" data-assign="<span class="var">:marker1|source|class</span>"</span>&gt;</span>  
+    <span class="tag">&lt;div <span class="func">marker style="<span class="var">background-color: red;</span>"</span>&gt;&lt;/div&gt;</span>
+    <span class="tag">&lt;div <span class="func">marker style="<span class="var">background-color: lime;</span>"</span>&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;input <span class="func">type="<span class="var">checkbox</span>"</span>&gt;</span>
+</pre>
+                </div> <br> 
+
+                <div class="">
+                    In the sample above, the <code class="c-var bc">":marker1"</code> modifier option will switch the behaviour of the source attribute such that 
+                    <code class="c-var bc">"foo"</code> will be toggled into the first marker's <code class="c-note bc">class</code> attribute when the checkbox is unchecked while 
+                    the second value <code class="c-var bc">"bar"</code> will be ignored. This means that only the first marker is affected because no value toggling activity will be performed on the second marker.
+                </div>
+            </div> <br>
+
+            <div class="code-box">
+                <div class="code">
+                    <div class="flex">
+                        <div class="">
+                           <i class="bi-hash"></i> modifier (:marker2)
+                        </div>
+                        <div class="">
+                            <span class="copy-btn"><i class="bi-clipboard"></i></span>
+                        </div>
+                    </div>
+<pre class="active"><span class="tag">&lt;div <span class="func">checkbox source="<span class="var">foo|bar</span>" data-assign="<span class="var">:marker2|source|class</span>"</span>&gt;</span>   
+    <span class="tag">&lt;div <span class="func">marker style="<span class="var">background-color: red;</span>"</span>&gt;&lt;/div&gt;</span>
+    <span class="tag">&lt;div <span class="func">marker style="<span class="var">background-color: lime;</span>"</span>&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;input <span class="func">type="<span class="var">checkbox</span>"</span>&gt;</span>
+</pre>
+                </div> <br> 
+            
+                <div class="">
+                    In the sample above, the <code class="c-var bc">:marker2</code> modifier option will switch the behaviour of the source attribute such that 
+                    <code class="c-var bc">"bar"</code> will be toggled into the second marker's <code class="c-note bc">class</code> attribute when the checkbox is checked while 
+                    the first value <code class="c-var bc">"foo"</code> will be ignored. This means that only the second marker is affected because no value toggling activity will be performed on the first marker.
+                </div>
+            </div> <br>
+
+
+            <div class="code-box">
+                <div class="code">
+                    <div class="flex">
+                        <div class="">
+                           <i class="bi-hash"></i> modifier (:markers)
+                        </div>
+                        <div class="">
+                            <span class="copy-btn"><i class="bi-clipboard"></i></span>
+                        </div>
+                    </div>
+<pre class="active"><span class="tag">&lt;div <span class="func">checkbox source="<span class="var">foo|bar</span>" data-assign="<span class="var">:markers|source|class</span>"</span>&gt;</span>   
+    <span class="tag">&lt;div <span class="func">marker style="<span class="var">background-color: red;</span>"</span>&gt;&lt;/div&gt;</span>
+    <span class="tag">&lt;div <span class="func">marker style="<span class="var">background-color: lime;</span>"</span>&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;input <span class="func">type="<span class="var">checkbox</span>"</span>&gt;</span>
+</pre>
+                </div> <br> 
+
+                <div class="">
+                    In the sample above, the <code class="c-var bc">":markers"</code> modifier option will switch the behaviour of the source attribute such that 
+                    <code class="c-var bc">"foo"</code> will be toggled into the first marker's <code class="c-note bc">class</code> attribute when the checkbox is unchecked 
+                    while <code class="c-var bc">"bar"</code> will be toggled into the second marker's class attribute when the checkbox is checked.
+                </div>
+            </div> <br>
+
+
+            <div class="nav-pane">
+            <a href="../docs/toggling-attribute.html" class="nav-btn-lt">
+                <i class="bi-arrow-left-circle"></i> 
+            </a> 
+            
+            <a href="../docs/injecting-attributes.html" class="nav-btn-rt">
+                <i class="bi-arrow-right-circle"></i> injecting attributes
+            </a> 
+            </div><br><br><br>
+        </section>
+
+        <script src="../src/js/docs.js"></script>
+        <script src="../src/js/navscript.js"></script>
+        <script>
+            let checkers = new CheckBox(true);
+  
+            checkers.check({
+               
+              target: '[checkers]',
+              flip: true
+              
+            });
+        </script>
+    </body>
+</html>
+
