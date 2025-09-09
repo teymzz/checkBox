@@ -402,7 +402,7 @@ new CheckBox({
 
 ### Other features 
 There are couple of other features supported by this plugin. The tutorial documentation 
-is available at [spoova packages](https:// checkbox.spoova.com) along with detailed examples of how custom checkboxes can be applied.
+is available at [spoova packages](https://checkbox.spoova.com) along with detailed examples of how custom checkboxes can be applied.
 
 ### Suggestions 
 For an easier way to select items, we suggest to download the [selector.js](https://github.com/teymzz/selector.js) plugin which helps to improve the query selection capacity of this plugin if a custom query selector is required.
