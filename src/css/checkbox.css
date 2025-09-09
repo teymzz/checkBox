@@ -41,14 +41,18 @@
     margin-left: 0;
 }
 
+.checkers-section{
+    display: flex;
+    gap: .2em;
+}
+
 .checkers.box {
-    background-color: #34264b;
+    background-color: #371942;
 }
 
 .checkers.box > div:nth-child(1) {
     padding: 4px; 
-    background-color: #3a3446;
-    background-color: #312647;
+    background-color: #402647;
     color: #958fc7;
 }
 
@@ -114,7 +118,7 @@
 }
 
 .wrap {
-    border: solid 2px #3a3446;
+    border: solid 2px rgb(91, 62, 92);
 }
 
 .wrap > *{
@@ -138,7 +142,7 @@
 .sample-box{
     align-items: center; 
     padding: 10px; 
-    background-color: #36324c;
+    background-color: #421e4f;
     white-space: nowrap;
 }
 
