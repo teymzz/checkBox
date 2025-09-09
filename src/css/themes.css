@@ -64,11 +64,46 @@
 
 /* -- fan icon theme -- */
 
-[fan]:active{
+[fan] > [checker] + input + [data-access="label"]:active{
     opacity: .2;
 }
 
-[fan] > [checker] + input + [data-access="label"]::before{
+[fan] [checker] { 
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+[fan] [marker] {
+    width: 30px;
+    height: 30px;
+    color: rgb(89, 84, 122);
+    border: solid;
+    border-radius: 18px;
+}
+[fan] 
+element.style {
+    /* border: solid; */
+    width: 100%;
+    padding: 0px 13px;
+    /* border-radius: 17px; */
+}
+.f-icon, .f-icon > .bi {
+    display: flex;
+    /* width: 122%; */
+    /* height: 100%; */
+    align-items: center;
+    justify-content: center;
+}
+
+[fan] > [checker] + input + [data-access="label"]{
+    padding: 10px 7px;
+    background: #2e2047;
+    align-self: center;
+    border-radius: 100vh;
+    border: solid 3px #2a1b3f;
+    box-shadow: 0px 0px 4px #000000 inset
+}
+[fan] > [checker] + input + [data-access="label"] > span::before{
 
     content: "";
     width: 10px;
@@ -79,7 +114,8 @@
     transition: background-color .2s ease, box-shadow 0s;
 }
 
-[fan] > [checker] + input:checked + [data-access="label"]::before{
+[fan] > [checker] + input:checked + [data-access="label"] > span::before{
+    color: inherit;
     background-color: currentColor;
     transition: background-color .2s ease, box-shadow .3s;
     box-shadow: 0 0 3px 0px currentColor;

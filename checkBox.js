@@ -1,12 +1,14 @@
 class CheckBox {
 
+    static customListItems = {};
+
     constructor(config = true) {
 
         let checkbox = this;
 
         checkbox.hardchecks = [];
 
-        checkbox.customListItems = {};
+        // checkbox.customListItems = {};
         checkbox.customListData = {};
 
         if(config === false) return checkbox;
@@ -43,13 +45,66 @@ class CheckBox {
         fsize = config.fsize;
         fit = config.fit;
         css = false;
+        let populate;
 
         if(typeof Selector === 'function'){
-            let selector = new Selector;
-            customBoxes = selector.select(checkbox.target);
+            populate = () => {
+                let selector = new Selector;
+                let customBoxes = selector.select(checkbox.target);
+                return customBoxes;
+            }
         }else{
-            customBoxes = document.querySelectorAll(checkbox.target)
+            populate = () =>  document.querySelectorAll(checkbox.target);
         }
+        
+        let checkListItems = [];
+        
+        customBoxes = populate();
+        customBoxes.forEach(box => {
+            let parent = box.closest('[data-role="checkbox-list"]');
+            if(parent && (parent.getAttribute('data-role') === "checkbox-list") && !checkListItems.includes(parent) && parent.getAttribute('data-clones')){
+                let rootItems = parent.querySelectorAll(":scope > *").length;
+                if(rootItems.length > 1){
+                    console.warn('custom clones must have one root source');
+                    return false;
+                }
+                checkListItems.push(parent);
+                let clones = parent.getAttribute('data-clones');
+                let config = clones.split(':');
+                clones = config[0];
+                let onEachBox = config[1];
+                let escapes = config[2];
+
+                if(onEachBox) onEachBox = onEachBox.trim(' ');
+                escapes = escapes ? escapes.split('.') : [];
+
+                if(isNaN(clones)){
+                    try{
+                        let testClones = document.querySelectorAll(clones+" > *");
+                        clones = testClones.length;
+                    }catch(err){
+                        console.error('generic data-clones attribute must be of value formats: \n "integer", "integer:callback:inversions" or "rootElement:callback:inversions"')
+                    }    
+                }
+
+                if(!isNaN(clones)){
+                    clones = parseInt(clones);
+                    clones = clones > 0 ? clones -1 : clones;
+                    if(onEachBox && (typeof window[onEachBox] === 'undefined')){
+                        console.warn('generic data-clones callback function does not exist in window"')
+                    }
+                    function onEach(box, id) {
+                        let input = box.querySelector('input');
+                        let checked = input.getAttribute('checked') === 'true';
+                        if(escapes.includes(`${id}`)||escapes.includes('*')||escapes.includes('+')) input.setAttribute('checked', checked? 'false':'true') 
+                        if(typeof window[onEachBox] === 'function') onEachBox(box, id);
+                    }
+                    CheckBox.generic(parent.innerHTML, { clones : clones, checklists: [parent], onEachBox: onEach })
+                }
+            }
+
+        })
+        customBoxes = populate(); // Repopulate customBoxes 
 
         // DEFINED HELPER FUNCTIONS
 
@@ -343,9 +398,7 @@ class CheckBox {
                             }
                         }
 
-
-
-                        //animation for custom box
+                        //animation for custom box ............................
 
                         //remove animation first ...
                         if(appliedSource){
@@ -447,10 +500,8 @@ class CheckBox {
                         }
 
                     }
-
                     
                 }
-
 
             }
 
@@ -475,6 +526,13 @@ class CheckBox {
 
 
                 let callback = customBox.getAttribute('data-func');
+                let callbackArg = [];
+                if(callback){
+                    let [func, ...arg] = callback.split(':');
+                    callback = func;
+                    arg = arg.join(':');
+                    if(arg) callbackArg = [arg];
+                }
                 
                 let marker1, marker2, flip = checkbox.flip;
                 let label, labels = [], label1, label2;
@@ -603,7 +661,11 @@ class CheckBox {
                 if(typeof toggle === 'function') toggle(checker);
                 
                 if(callback) {
-                    window[callback](checker);
+                    if(typeof window[callback] !=='function'){
+                        console.warn('unknown callback function "'+callback+'" defined in data-func attribute');
+                    }else{
+                        window[callback](checker, ...callbackArg);
+                    }
                 }
 
             }else{
@@ -621,7 +683,7 @@ class CheckBox {
             let customLists = checkList.querySelectorAll(checkbox.target);
 
             if(at(checkList).hasAttr('id')){
-                checkbox.customListItems[at(checkList,'id').value()] = checkList;
+                CheckBox.customListItems[at(checkList,'id').value()] = checkList;
             }
 
             if(customLists.length > 0){
@@ -630,7 +692,8 @@ class CheckBox {
                 let checkListBind = at(checkList, 'data-bind');
                 let checkListSwipe = at(checkList, 'data-swipe');
                 let dataBindValue = checkListBind.value().split("-");
-                let checkListNav = at(checkList, 'data-nav').value().split('|');
+                let dataNavi = at(checkList, 'data-nav').value().split(':');
+                let checkListNav = dataNavi[0]?.split('|');
                 let isSlide = false, slideTime = 2500;
 
                 if(checkListNav.length > 0 && (at(checkList,'id') !== '')) {
@@ -660,13 +723,14 @@ class CheckBox {
                       if(checkListNav[1] && (checkListNav[1].trim() !== '')){
                           NextNav = document.getElementById(checkListNav[1]);
                       }
+                      NavEvents = dataNavi[1]; // event
                       
-                      if(checkListNav.length >= 3) {
+                      if(checkListNav.length === 3) { 
                           stopNav = checkListNav[2];
-                          NavEvents = checkListNav[3];
-                      }else{
-                          NavEvents = checkListNav[2];
                       }
+                    //   else{
+                    //       NavEvents = checkListNav[2];
+                    //   }
                       
                       if(stopNav && (stopNav.trim() !== '')) stopNav = document.getElementById(stopNav);
     
@@ -702,7 +766,7 @@ class CheckBox {
                               
                               let forwards, timer;
                               
-                              let flowEvents = ['hover','click','press'];
+                              let flowEvents = ['load','hover','click','press'];
                               let isNavigatorEffect = false;
     
                               forwards = event.split('-');
@@ -727,9 +791,13 @@ class CheckBox {
                               // set navigation sliding handlers
                               function NavSlide(Nav, event){
                                   if(Nav){
-                                      Nav.addEventListener(event, function(e){
+                                      if(event === 'load'){
                                           (Nav === PrevNav)? NavBtns.prev(timer) : NavBtns.next(timer);
-                                      })
+                                      }else{
+                                          Nav.addEventListener(event, function(e){
+                                              (Nav === PrevNav)? NavBtns.prev(timer) : NavBtns.next(timer);
+                                          })
+                                      }
                                   }
                               }
                               function NavUnSlide(Nav, event){
@@ -760,6 +828,8 @@ class CheckBox {
                                       NavUnSlide(NextNav, stopper2);
                                   }else if(event === 'click') {
                                       starter1 = 'click';
+                                  }else if(event === 'load') {
+                                      starter1 = 'load';
                                   }
                                   
                                   NavSlide(PrevNav, starter1);
@@ -770,8 +840,8 @@ class CheckBox {
                                           NavBtns.stop();
                                       })
                                   }
-    
-                                  if(event !== 'click'){
+
+                                  if(event !== 'click' && event !== 'load'){
                                       // apply exit effect to only hover & mousedown
                                       NavUnSlide(PrevNav, stopper1);
                                       NavUnSlide(NextNav, stopper1);
@@ -787,7 +857,6 @@ class CheckBox {
                       }
                       
                     }
-                    
 
                 }
 
@@ -1116,7 +1185,7 @@ class CheckBox {
                 let labels = [], label1, label2, label;
                 let colors = [], color1, color2, mColor = false;
                 let customParent, customLabel;
-                let callback, eager = false;
+                let callback, callbackArg = [], eager = false;
 
                 input.setAttribute('hidden', '');
 
@@ -1124,6 +1193,12 @@ class CheckBox {
                 checker.color = customBox.getAttribute('data-color') || '';
                 
                 callback = customBox.getAttribute('data-func');
+                if(callback){
+                    let [func, ...arg] = callback.split(':');
+                    callback = func;
+                    arg = arg.join(':');
+                    if(arg) callbackArg = [arg];
+                }
 
                 eager = at(customBox).hasAttr('data-init');
 
@@ -1341,7 +1416,12 @@ class CheckBox {
                 }
 
                 if(eager && callback !== ''){
-                    window[callback](properties)
+                    if(typeof window[callback] !=='function'){
+                        console.warn('unknown callback function "'+callback+'" defined in data-func attribute');
+                        callback = undefined;
+                    }else{
+                        window[callback](properties, ...callbackArg);
+                    }
                 }
 
                 input.addEventListener('click', function(e){
@@ -1573,6 +1653,79 @@ class CheckBox {
         
     }
 
+    /**
+     * Static helper to append custom boxes into checklist containers.
+     * 
+     * @param {HTMLElement|string} customBox - The checkbox element or HTML string
+     * @param {Object} options
+     * @param {number} [options.clones=1] - Number of copies to insert per container
+     * @param {Function} [options.onEachBox] - Function run on each inserted box
+     * @param {string|string[]} [options.checklists] - Target container(s) by id
+     * @returns {HTMLElement[]} - Flat array of all appended elements
+     */
+    static generic(customBox, { clones = 1, onEachBox = null, checklists = [] } = {}) {
+        if (!customBox) return [];
+
+        // Normalize checklists to array
+        if ((typeof checklists === "string") || (checklists instanceof Element)) {
+            checklists = [checklists];
+        }
+
+        // Convert string to HTMLElement if needed
+        let templateEl;
+        if (typeof customBox === "string") {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(customBox, "text/html");
+        templateEl = doc.body.firstElementChild;
+
+        // Wrap if missing data-role="checkbox"
+        if (!templateEl || templateEl.getAttribute("data-role") !== "checkbox") {
+            const wrapper = document.createElement("div");
+            wrapper.setAttribute("data-role", "checkbox");
+            if (templateEl) wrapper.appendChild(templateEl);
+            templateEl = wrapper;
+        }
+        } else {
+            templateEl = customBox;
+        }
+
+        // Validation: must contain <input type="checkbox">
+        const hasInput = templateEl.querySelector?.('input[type="checkbox"]');
+        if (!hasInput) {
+            console.warn("generic custom checkboxes must contain an input of checkbox type");
+            return [];
+        }
+
+        const appended = [];
+
+        // Insert into target containers
+        checklists.forEach(id => {
+            let container;
+            if(typeof id === 'string'){
+                container = document.getElementById(id);
+                if (!container) return;
+            }else{
+                container = id;
+            }
+
+            // Ensure container has [data-role="checkbox-list"]
+            container.setAttribute("data-role", "checkbox-list");
+
+            for (let i = 1; i <= clones; i++) {
+                const box = templateEl.cloneNode(true);
+
+                if (typeof onEachBox === "function") {
+                    onEachBox(box, i, container);
+                }
+
+                container.appendChild(box);
+                appended.push(box);
+            }
+        });
+
+        return appended;
+    }
+
     check(config) {
       return new CheckBox(config);
     }
@@ -1581,7 +1734,7 @@ class CheckBox {
         let checkbox = this;
 
         //get checklist id from custom lists 
-        let customListItem = checkbox.customListItems[id];
+        let customListItem = CheckBox.customListItems[id];
         
         if(!customListItem) return {response: 'checklist id {'+id+'} not found!', exists: false}; //Accept only checkbox lists with id
         let customListSelector = checkbox.target;
@@ -1759,23 +1912,35 @@ class CheckBox {
             },
 
             prev: (interval) => {
-
-              if(data.nextActive) {
-                clearInterval(data.nextInterval);
-                data.nextActive = false;
+            
+              if(interval === false && !data.statePaused){
+                data.statePaused = true;
+                return false;
+              }else if(interval === true){
+                data.statePaused = false;
+                return true;
+              }else if(!isNaN(interval)) {
+                data.statePaused = false;
               }
-               
-              //get all custom boxes... 
-              let current = currentCheckbox();
-              let previous = current - 1;
-
-              if(previous < 0) previous = customBoxesNum - 1;
-             
-              customBoxes[previous].click();
-              
-              if(interval && (!data.prevActive)) {
-                data.prevActive = true;
-                data.prevInterval = setInterval(() => controller.prev(), interval)
+              if(!data.statePaused){
+                  if(data.nextActive) {
+                    clearInterval(data.nextInterval);
+                    data.nextActive = false;
+                  }
+                   
+                  //get all custom boxes... 
+                  let current = currentCheckbox();
+                  let previous = current - 1;
+    
+                  if(previous < 0) previous = customBoxesNum - 1;
+                 
+                  if(!customBoxes[previous]) console.warn('Target checkbox selector may mismatch. Current selector is:'+customListSelector)
+                  customBoxes[previous]?.click();
+                  
+                  if(interval && (!data.prevActive)) {
+                    data.prevActive = true;
+                    data.prevInterval = setInterval(() => controller.prev(), interval)
+                  }
               }
             }, 
             
@@ -1792,21 +1957,36 @@ class CheckBox {
             },
             
             next: (interval) => {
-              if(data.prevActive) {
-                clearInterval(data.prevInterval)
-                data.prevActive = false;
+                
+              if(interval === false && !data.statePaused){
+                data.statePaused = true;
+                return false;
+              }else if(interval === true){
+                data.statePaused = false; 
+                return true;
+              }else if(!isNaN(interval)) {
+                data.statePaused = false;
               }
-              //get all custom boxes... 
-              let current = currentCheckbox();
-              let next = current + 1;
 
-              if(next > (customBoxesNum - 1)) next = 0;
-             
-              customBoxes[next].click();
-              if(interval && (!data.nextActive)) {
-                data.nextActive = true;
-                data.nextInterval = setInterval(() => controller.next(), interval)
+              if(!data.statePaused){
+                  if(data.prevActive) {
+                    clearInterval(data.prevInterval)
+                    data.prevActive = false;
+                  }
+                  //get all custom boxes... 
+                  let current = currentCheckbox();
+                  let next = current + 1;
+    
+                  if(next > (customBoxesNum - 1)) next = 0;
+                 
+                  if(!customBoxes[next]) console.warn('Target checkbox selector may mismatch. Current selector is: '+customListSelector)
+                  customBoxes[next]?.click();
+                  if(interval && (!data.nextActive)) {
+                    data.nextActive = true;
+                    data.nextInterval = setInterval(() => controller.next(), interval)
+                  }
               }
+
             },
 
             switch: (number, status = 'both') => {
@@ -1889,7 +2069,6 @@ class CheckBox {
                 return false;
 
             }
-            
 
         }
 
